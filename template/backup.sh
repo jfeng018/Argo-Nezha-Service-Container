@@ -64,13 +64,11 @@ touch $(awk -F '=' '/NO_ACTION_FLAG/{print $2; exit}' $WORK_DIR/restore.sh)1
 [ "$1" = 'f' ] && WAY=Manualed && FORCE_UPDATE=true
 
 # 检查更新面板主程序 app 及 cloudflared
-if [ -z "$DASHBOARD_VERSION" ]; then
+if [[ -z "$DASHBOARD_VERSION" || "$DASHBOARD_VERSION" =~ ^0\.[0-9]{1,2}\.[0-9]{1,2}$ ]]; then
   cd $WORK_DIR
   DASHBOARD_NOW=$(./app -v)
-  DASHBOARD_LATEST='v0.20.13'
+  [ -z "$DASHBOARD_VERSION" ] && DASHBOARD_LATEST='v0.20.13' || DASHBOARD_LATEST=$(sed 's/v//; s/^/v&/' <<< "$DASHBOARD_VERSION")
   [ "$DASHBOARD_NOW" != "$DASHBOARD_LATEST" ] && DASHBOARD_UPDATE=true
-elif [[ "$DASHBOARD_VERSION" =~ ^0\.[0-9]{1,2}\.[0-9]{1,2}$ ]]; then
-  DASHBOARD_LATEST=$(sed 's/v//; s/^/v&/' <<< "$DASHBOARD_VERSION")
 else
   error "The DASHBOARD_VERSION variable should be in a format like v0.00.00, please check."
 if
