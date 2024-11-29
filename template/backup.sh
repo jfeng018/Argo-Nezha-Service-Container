@@ -13,11 +13,11 @@ ARCH=
 WORK_DIR=
 DAYS=5
 IS_DOCKER=
-DASHBOARD_VERSION=
+$DASHBOARD_VERSION=
 
 ########
 
-# version: 2024.03.21
+# version: 2024.11.29
 
 warning() { echo -e "\033[31m\033[01m$*\033[0m"; }  # 红色
 error() { echo -e "\033[31m\033[01m$*\033[0m" && exit 1; } # 红色
@@ -71,6 +71,8 @@ if [ -z "$DASHBOARD_VERSION" ]; then
   [ "$DASHBOARD_NOW" != "$DASHBOARD_LATEST" ] && DASHBOARD_UPDATE=true
 elif [[ "$DASHBOARD_VERSION" =~ ^0\.[0-9]{1,2}\.[0-9]{1,2}$ ]]; then
   DASHBOARD_LATEST=$(sed 's/v//; s/^/v&/' <<< "$DASHBOARD_VERSION")
+else
+  error "The DASHBOARD_VERSION variable should be in a format like v0.00.00, please check."
 if
 
 CLOUDFLARED_NOW=$(./cloudflared -v | awk '{for (i=0; i<NF; i++) if ($i=="version") {print $(i+1)}}')
